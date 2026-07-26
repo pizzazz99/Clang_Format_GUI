@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Clang-Format GUI
 
 A small WinForms front-end for batch-running `clang-format` over a folder of
@@ -78,3 +79,7 @@ Settings (paths, target, last folder, file types) are stored in
 - The window is a custom borderless dark UI (drag by the title bar; use the
   `?` / `—` / `✕` buttons for help/minimize/close) rather than the OS
   default chrome, and is a fixed size rather than freely resizable.
+=======
+# Clang_Format_GUI
+A graphical windows form application for formatting code with clang-format
+>>>>>>> 832baf103a450a140c0dff1f3dcccb0312bf8964
