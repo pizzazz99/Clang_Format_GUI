@@ -1,0 +1,33 @@
+root = true
+
+[*]
+indent_style = space
+indent_size = 2
+end_of_line = crlf
+charset = utf-8
+trim_trailing_whitespace = true
+insert_final_newline = true
+
+[*.cs]
+csharp_new_line_before_open_brace = all
+
+dotnet_naming_rule.private_fields_should_be_ada_style.severity = warning
+dotnet_naming_rule.private_fields_should_be_ada_style.symbols = private_fields
+dotnet_naming_rule.private_fields_should_be_ada_style.style = ada_private_style
+
+dotnet_naming_symbols.private_fields.applicable_kinds = field
+dotnet_naming_symbols.private_fields.applicable_accessibilities = private, private_protected
+
+dotnet_naming_style.ada_private_style.required_prefix = _
+dotnet_naming_style.ada_private_style.capitalization = pascal_case
+dotnet_naming_style.ada_private_style.word_separator = _
+
+dotnet_naming_rule.everything_else_should_be_ada_style.severity = warning
+dotnet_naming_rule.everything_else_should_be_ada_style.symbols = everything_else
+dotnet_naming_rule.everything_else_should_be_ada_style.style = ada_style
+
+dotnet_naming_symbols.everything_else.applicable_kinds = namespace, class, struct, interface, enum, property, method, field, event, delegate, type_parameter, local, parameter, local_function
+dotnet_naming_symbols.everything_else.applicable_accessibilities = *
+
+dotnet_naming_style.ada_style.capitalization = pascal_case
+dotnet_naming_style.ada_style.word_separator = _

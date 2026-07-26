@@ -1,0 +1,152 @@
+# ============================================================
+# C# clang-format configuration
+# Optimized for WinForms / Logging-heavy / Named parameters
+# Verified against clang-format 22.1.8
+# ============================================================
+Language:        CSharp
+BasedOnStyle:    LLVM
+# ------------------------------------------------------------
+# Indentation
+# ------------------------------------------------------------
+IndentWidth: 2
+TabWidth: 2
+ContinuationIndentWidth: 2
+UseTab: Never
+IndentAccessModifiers: false
+IndentCaseBlocks: true
+IndentCaseLabels: true
+IndentGotoLabels: true
+IndentWrappedFunctionNames: false
+IndentPPDirectives: AfterHash
+IndentRequiresClause: true
+# ------------------------------------------------------------
+# Column & line breaking
+# ------------------------------------------------------------
+ColumnLimit: 100
+BreakBeforeBinaryOperators: None
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: true
+  AfterStruct: true
+  AfterEnum: true
+  AfterFunction: true
+  AfterNamespace: true
+  AfterControlStatement: Always
+  BeforeElse: true
+  BeforeCatch: true
+  BeforeWhile: false
+  IndentBraces: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: false
+AllowShortLambdasOnASingleLine: Empty
+AlwaysBreakTemplateDeclarations: Yes
+AlwaysBreakAfterReturnType: None
+BreakConstructorInitializers: BeforeColon
+PackConstructorInitializers: Never
+BreakStringLiterals: true
+BreakInheritanceList: BeforeColon
+# ------------------------------------------------------------
+# Arguments / Parameters / Named parameters
+# ------------------------------------------------------------
+BinPackArguments: true
+BinPackParameters: true
+AlignAfterOpenBracket: true
+AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: true
+AlignConsecutiveAssignments:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+  AlignCompound: true
+  PadOperators: true
+AlignConsecutiveDeclarations:
+  Enabled: true
+  AcrossEmptyLines: true
+  AcrossComments: true
+AlignConsecutiveMacros:
+  Enabled: true
+  AcrossEmptyLines: false
+  AcrossComments: true
+AlignTrailingComments:
+  Kind: Always
+  OverEmptyLines: 1
+AlignEscapedNewlines: Left
+AlignOperands: Align
+# ------------------------------------------------------------
+# Spacing
+# ------------------------------------------------------------
+SpacesInParentheses: true
+SpaceBeforeParens: Always
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: true
+SpacesInSquareBrackets: true
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: true
+SpaceBeforeCpp11BracedList: false
+SpaceAfterTemplateKeyword: false
+SpacesInLineCommentPrefix:
+  Minimum: 1
+  Maximum: 1
+SpaceBeforeRangeBasedForLoopColon: true
+SpacesInAngles: Never
+# ------------------------------------------------------------
+# Logging / long expressions safety
+# ------------------------------------------------------------
+PenaltyBreakBeforeFirstCallParameter: 1000
+# CHANGED: was 2 — that near-zero cost told clang-format that
+# breaking after "=" was basically free, so it broke assignments
+# well before hitting ColumnLimit. Raised so it only breaks when
+# actually needed.
+PenaltyBreakAssignment: 100
+PenaltyBreakString: 1
+PenaltyExcessCharacter: 1000000
+PenaltyBreakComment: 300
+PenaltyReturnTypeOnItsOwnLine: 200
+PenaltyIndentedWhitespace: 0
+# ------------------------------------------------------------
+# Comments
+# ------------------------------------------------------------
+ReflowComments: true
+FixNamespaceComments: true
+KeepEmptyLinesAtTheStartOfBlocks: true
+MaxEmptyLinesToKeep: 1
+CommentPragmas: '^ IWYU pragma:'
+# ------------------------------------------------------------
+# Misc / advanced
+# ------------------------------------------------------------
+SortUsingDeclarations: LexicographicNumeric
+NamespaceIndentation: All
+Standard: Latest
+PointerAlignment: Right
+InsertTrailingCommas: None
+InsertNewlineAtEOF: true
+CompactNamespaces: false
+RemoveSemicolon: true
+SeparateDefinitionBlocks: Leave
+EmptyLineBeforeAccessModifier: Always
+EmptyLineAfterAccessModifier: Never
+LineEnding: CRLF
+# ------------------------------------------------------------
+# Macros / Qt / Special Cases (inert for C#, harmless to keep)
+# ------------------------------------------------------------
+AttributeMacros:
+  - __capability
+ForEachMacros:
+  - foreach
+  - Q_FOREACH
+  - BOOST_FOREACH
+IfMacros:
+  - KJ_IF_MAYBE
+StatementAttributeLikeMacros:
+  - Q_EMIT
+StatementMacros:
+  - Q_UNUSED
+  - QT_REQUIRE_VERSION
+WhitespaceSensitiveMacros:
+  - BOOST_PP_STRINGIZE
+  - CF_SWIFT_NAME
+  - NS_SWIFT_NAME
+  - PP_STRINGIZE
+  - STRINGIZE
