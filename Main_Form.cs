@@ -21,6 +21,13 @@ namespace Clang_Format_Gui
     private Point _Drag_Cursor_Start;
     private Point _Drag_Form_Start;
 
+    // The size InitializeComponent lays every control out at — resizing
+    // scales everything relative to this baseline, not incrementally
+    // from the previous frame, so repeated resizes don't drift.
+    private static readonly Size _Base_Client_Size = new(1440, 900);
+    private float _Current_Scale_X = 1f;
+    private float _Current_Scale_Y = 1f;
+
     private bool _Is_Busy;
     private string? _Current_Preview_Target;
 
@@ -98,6 +105,73 @@ namespace Clang_Format_Gui
     private void Title_Bar_Mouse_Up(object? Sender, MouseEventArgs Args)
     {
       _Is_Dragging = false;
+    }
+
+    // ============================================================
+    //  Borderless-window resize
+    // ============================================================
+    // FormBorderStyle.None removes the OS resize border along with its
+    // chrome, so the standard resize-edge behavior has to be re-created
+    // by hand: tell Windows the outer few pixels are non-client resize
+    // handles, and it drives the actual drag-resize natively from there.
+    private const int _WM_NCHITTEST = 0x0084;
+    private const int _HTCLIENT = 1;
+    private const int _Resize_Border_Thickness = 6;
+
+    protected override void WndProc(ref Message Msg)
+    {
+      if (Msg.Msg == _WM_NCHITTEST)
+      {
+        base.WndProc(ref Msg);
+        if ((int)Msg.Result == _HTCLIENT)
+        {
+          int Packed = (int)(long)Msg.LParam;
+          var Screen_Point = new Point((short)(Packed & 0xFFFF), (short)((Packed >> 16) & 0xFFFF));
+          var Client_Point = PointToClient(Screen_Point);
+
+          bool On_Left = Client_Point.X <= _Resize_Border_Thickness;
+          bool On_Right = Client_Point.X >= ClientSize.Width - _Resize_Border_Thickness;
+          bool On_Top = Client_Point.Y <= _Resize_Border_Thickness;
+          bool On_Bottom = Client_Point.Y >= ClientSize.Height - _Resize_Border_Thickness;
+
+          if (On_Top && On_Left) Msg.Result = 13;        // HTTOPLEFT
+          else if (On_Top && On_Right) Msg.Result = 14;  // HTTOPRIGHT
+          else if (On_Bottom && On_Left) Msg.Result = 16;  // HTBOTTOMLEFT
+          else if (On_Bottom && On_Right) Msg.Result = 17; // HTBOTTOMRIGHT
+          else if (On_Left) Msg.Result = 10;   // HTLEFT
+          else if (On_Right) Msg.Result = 11;  // HTRIGHT
+          else if (On_Top) Msg.Result = 12;    // HTTOP
+          else if (On_Bottom) Msg.Result = 15; // HTBOTTOM
+        }
+        return;
+      }
+
+      base.WndProc(ref Msg);
+    }
+
+    // Rescales every control's position, size and font relative to the
+    // 1440x900 baseline InitializeComponent lays out, so the whole UI
+    // grows/shrinks in proportion as the window is dragged to a new size.
+    private void Main_Form_Resize(object? Sender, EventArgs Args)
+    {
+      if (WindowState != FormWindowState.Normal) return;
+      if (ClientSize.Width <= 0 || ClientSize.Height <= 0) return;
+
+      float Target_Scale_X = (float)ClientSize.Width / _Base_Client_Size.Width;
+      float Target_Scale_Y = (float)ClientSize.Height / _Base_Client_Size.Height;
+
+      float Delta_X = Target_Scale_X / _Current_Scale_X;
+      float Delta_Y = Target_Scale_Y / _Current_Scale_Y;
+
+      if (Math.Abs(Delta_X - 1f) < 0.0005f && Math.Abs(Delta_Y - 1f) < 0.0005f)
+        return;
+
+      SuspendLayout();
+      _Root_Panel.Scale(new SizeF(Delta_X, Delta_Y));
+      ResumeLayout(true);
+
+      _Current_Scale_X = Target_Scale_X;
+      _Current_Scale_Y = Target_Scale_Y;
     }
 
     // ============================================================
